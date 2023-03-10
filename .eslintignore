@@ -1,0 +1,8 @@
+**/*.js
+**/*.css
+**/*.svg
+node_modules
+build
+**/*.d.*
+src/common/helpers/tests/*
+**/*.project
