@@ -21,15 +21,15 @@ const Bar = (props: BarProps): JSX.Element => {
   })
 
   return (
-    <BarContainer ref={barContainerRef} width={width} position={position}>
+    <BarContainer ref={barContainerRef} style={{ width, left: position }}>
       <TooltipWrapper
-        height={height}
+        style={{ top: `calc(100% - ${height}px)` }}
         data-tooltip-id='histogram-tooltip'
         data-tooltip-content={props.tooltipContent}
         data-tooltip-delay-show={200}
         data-tooltip-delay-hide={200}
       >
-        <BarDiv height={height} />
+        <BarDiv style={{ height }} />
       </TooltipWrapper>
     </BarContainer>
   )

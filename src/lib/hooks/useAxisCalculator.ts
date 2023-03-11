@@ -38,10 +38,6 @@ export const useAxisCalculator = (props: ChartDetails): ReturnData => {
 
   useEffect(() => {
     if (histogramHeight && lineHeight) {
-      const minValue = 0
-
-      console.log(props.maxValue, minValue)
-
       const oneLinePercentage = lineHeight / histogramHeight
       const possibleDivsNumber = Math.floor(histogramHeight / lineHeight)
 

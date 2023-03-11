@@ -15,36 +15,38 @@ type ReturnData = {
 }
 
 export const useBarCalculator = (props: BarDetails): ReturnData => {
-  const [barWidth, setBarWidth] = useState<number>(0) // px
-  const [barHeight, setBarHeight] = useState<number>(0) // px
-  const [barPosition, setBarPosition] = useState<number>(0) // px
-  const [barContainerHeight, setBarContainerHeight] = useState<number | undefined>(undefined)
+  const [barContainerHeight, setBarContainerHeight] = useState<number>(0)
+  const [axisWidth, setAxisWidth] = useState(0)
+  const [axisPositionX, setAxisPositionX] = useState(0)
 
-  const getBarPosition = (axisItem: Element): number => {
-    const histogramContainer = document.getElementById('chart-container')
-    const histogramPositionX = histogramContainer?.getBoundingClientRect().x
-    const axisPositionX = axisItem.getBoundingClientRect().x
-
-    return histogramPositionX ? axisPositionX - histogramPositionX : 0
-  }
+  useEffect(() => {
+    if (props.barRef.current) {
+      setBarContainerHeight(props.barRef.current.clientHeight)
+    }
+  }, [])
 
   useEffect(() => {
     const axisItem = document.getElementsByClassName('x-axis-item')[props.representedValueIndex]
 
-    setBarContainerHeight(props.barRef.current?.clientHeight)
-    setBarWidth(axisItem?.clientWidth ?? 0)
-    setBarPosition(getBarPosition(axisItem))
-  }, [props.representedValueIndex, props.data])
+    setAxisWidth(axisItem.clientWidth)
+    setAxisPositionX(axisItem.getBoundingClientRect().x)
+  }, [props.representedValueIndex, props.data.x])
 
-  useEffect(() => {
-    if (barContainerHeight) {
-      const oneUnitPixels = barContainerHeight / props.maxValue
-      setBarHeight(oneUnitPixels * props.data.y)
-    }
-  }, [props.data, barContainerHeight, props.maxValue])
+  const getBarPosition = (): number => {
+    const histogramContainer = document.getElementById('chart-container')
+    const histogramPositionX = histogramContainer?.getBoundingClientRect().x
+
+    return histogramPositionX ? axisPositionX - histogramPositionX : 0
+  }
+
+  const barPosition = useMemo(() => getBarPosition(), [axisPositionX])
+  const barHeight = useMemo(
+    () => (barContainerHeight / props.maxValue) * props.data.y,
+    [barContainerHeight, props.maxValue, props.data.y]
+  )
 
   return {
-    width: barWidth,
+    width: axisWidth ?? 0,
     height: barHeight,
     position: barPosition
   }
