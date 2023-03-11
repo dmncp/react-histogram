@@ -13,22 +13,35 @@ type ReturnData = {
 export const useAxisCalculator = (props: ChartDetails): ReturnData => {
   const [histogramHeight, setHistogramHeight] = useState<number | undefined>(undefined)
   const [lineHeight, setLineHeight] = useState<number | undefined>(undefined)
-  const [axisValues, setAxisValues] = useState<number[]>(props.dataValues)
+  const [axisValues, setAxisValues] = useState<number[]>([])
 
-  const sortedUniqueValues = useMemo(() => {
-    const sorted = props.dataValues.sort((a, b) => b - a)
-    return [...new Set(sorted)]
-  }, [props.dataValues])
+  const getLineHeight = (): number | undefined => {
+    let divHeight
+
+    const div = document.createElement('div')
+    div.innerHTML = '0'
+    div.style.borderBottom = '1px solid black'
+    div.style.paddingTop = '10px'
+    props.containerRef.current?.appendChild(div)
+
+    divHeight = getOuterHeight(div)
+
+    props.containerRef.current?.removeChild(div)
+
+    return divHeight
+  }
 
   useEffect(() => {
     setHistogramHeight(props.containerRef.current?.clientHeight)
-    setLineHeight(getOuterHeight(props.containerRef.current?.firstElementChild))
+    setLineHeight(getLineHeight())
   }, [])
 
   useEffect(() => {
     if (histogramHeight && lineHeight) {
-      const maxValue = sortedUniqueValues[0]
-      const minValue = sortedUniqueValues[sortedUniqueValues.length - 1]
+      const maxValue = props.dataValues[0]
+      const minValue = props.dataValues[props.dataValues.length - 1]
+
+      console.log(maxValue, minValue)
 
       const possibleDivsNumber = Math.floor(histogramHeight / lineHeight)
       const valuesStep = Math.floor(maxValue / possibleDivsNumber)
@@ -38,7 +51,7 @@ export const useAxisCalculator = (props: ChartDetails): ReturnData => {
         setAxisValues((prevState) => [minValue + valuesStep * i, ...prevState])
       }
     }
-  }, [lineHeight, histogramHeight, sortedUniqueValues])
+  }, [lineHeight, histogramHeight, props.dataValues])
 
   return {
     axisValues

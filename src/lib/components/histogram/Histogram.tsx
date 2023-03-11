@@ -3,6 +3,7 @@ import { getDateValue } from '../../../helpers/dataGenerator'
 import { AxisVariant, ChartData, ChartType, DateFormat } from '../../types/HistogramTypes'
 import AxisX from '../axis/AxisX'
 import AxisY from '../axis/AxisY'
+import Bar from '../bar/Bar'
 import Slider from '../slider/Slider'
 import { HistogramContainer } from './HistogramStyle'
 
@@ -29,11 +30,20 @@ const Histogram = (props: HistogramProps): JSX.Element => {
     [props.data, props.dateFormat]
   )
 
+  const sortedUniqueValues = useMemo(() => {
+    const sorted = getLabels('y').sort((a, b) => b - a)
+    return [...new Set(sorted)]
+  }, [props.data])
+
   return (
     <>
-      <HistogramContainer style={{ width: props.width, height: props.height }}>
+      <HistogramContainer id='histogram-container' style={{ width: props.width, height: props.height }}>
         <AxisX labels={getLabels('x')} />
-        <AxisY labels={getLabels('y')} />
+        <AxisY labels={sortedUniqueValues} />
+
+        {props.data.map((dataPair, index: number) => (
+          <Bar data={dataPair} dataIndex={index} maxValue={sortedUniqueValues[0]} />
+        ))}
       </HistogramContainer>
       {!props.disableSlider ? <Slider /> : null}
     </>

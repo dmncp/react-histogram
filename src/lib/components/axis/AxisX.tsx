@@ -8,7 +8,9 @@ const AxisX = (props: AxisProps): JSX.Element => {
       <LineX />
       <LabelsXContainer>
         {props.labels.map((label, index: number) => (
-          <div key={`x-label-${index}`}>{label}</div>
+          <div className='x-axis-item' key={`x-label-${index}`}>
+            {label}
+          </div>
         ))}
       </LabelsXContainer>
     </>

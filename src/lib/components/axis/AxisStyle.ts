@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const LabelsXContainer = styled.div`
   width: 80%;
   height: 20px;
-  background-color: red;
+  /* background-color: red; */
   position: absolute;
   top: 101%;
   left: 50%;
@@ -24,7 +24,7 @@ export const LineX = styled.div`
 export const LabelsYContainer = styled.div`
   width: 90%;
   height: 100%;
-  background-color: green;
+  /* background-color: green; */
   position: relative;
   left: 50%;
   transform: translateX(-50%);
