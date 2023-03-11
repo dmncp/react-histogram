@@ -23,5 +23,9 @@ export const BarDiv = styled.div<BarDivProps>`
   width: 100%;
   position: relative;
   height: ${(props) => props.height + 'px'};
+`
+
+export const TooltipWrapper = styled.a<BarDivProps>`
+  position: relative;
   top: ${(props) => `calc(100% - ${props.height}px)`};
 `

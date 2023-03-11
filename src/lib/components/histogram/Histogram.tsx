@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { Tooltip } from 'react-tooltip'
 import { getDateValue } from '../../../helpers/dataGenerator'
 import { AxisVariant, ChartData, ChartType, DateFormat } from '../../types/HistogramTypes'
 import AxisX from '../axis/AxisX'
@@ -6,6 +7,7 @@ import AxisY from '../axis/AxisY'
 import Bar from '../bar/Bar'
 import Slider from '../slider/Slider'
 import { HistogramContainer } from './HistogramStyle'
+import 'react-tooltip/dist/react-tooltip.css'
 
 export type HistogramProps = {
   data: ChartData[]
@@ -42,10 +44,17 @@ const Histogram = (props: HistogramProps): JSX.Element => {
         <AxisY labels={sortedUniqueValues} />
 
         {props.data.map((dataPair, index: number) => (
-          <Bar data={dataPair} dataIndex={index} maxValue={sortedUniqueValues[0]} />
+          <Bar
+            key={'bar-' + index}
+            data={dataPair}
+            dataIndex={index}
+            maxValue={sortedUniqueValues[0]}
+            tooltipContent={dataPair.y.toString()}
+          />
         ))}
       </HistogramContainer>
       {!props.disableSlider ? <Slider /> : null}
+      <Tooltip id='histogram-tooltip' />
     </>
   )
 }
