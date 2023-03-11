@@ -46,7 +46,7 @@ export const useAxisCalculator = (props: ChartDetails): ReturnData => {
       const possibleDivsNumber = Math.floor(histogramHeight / lineHeight)
 
       setAxisValues([])
-      for (let i = 0; i <= possibleDivsNumber; i++) {
+      for (let i = 0; i < possibleDivsNumber; i++) {
         setAxisValues((prevState) => [Math.round(oneLinePercentage * i * props.maxValue * 10) / 10, ...prevState])
       }
     }

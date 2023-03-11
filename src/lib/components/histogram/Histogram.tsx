@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { getDateValue } from '../../../helpers/dataGenerator'
 import { AxisVariant, ChartData, ChartType, DateFormat } from '../../types/HistogramTypes'
@@ -6,7 +6,7 @@ import AxisX from '../axis/AxisX'
 import AxisY from '../axis/AxisY'
 import Bar from '../bar/Bar'
 import Slider from '../slider/Slider'
-import { HistogramContainer } from './HistogramStyle'
+import { ChartContainer, HistogramContainer } from './HistogramStyle'
 import 'react-tooltip/dist/react-tooltip.css'
 
 export type HistogramProps = {
@@ -18,32 +18,45 @@ export type HistogramProps = {
   disableSlider?: boolean
 }
 
+export const MAX_BARS_NUMBER = 30
+
 const Histogram = (props: HistogramProps): JSX.Element => {
   // if disableSlider === true: fit all dataset on the graph
+  const [data, setData] = useState<ChartData[]>([])
+  const [sliceFrom, setSliceFrom] = useState<number>(0)
+  const [sliceTo, setSliceTo] = useState<number>(MAX_BARS_NUMBER)
 
   const getLabels = useCallback(
     (variant: AxisVariant) => {
       if (variant === 'x') {
-        return props.data.map((dataPair) => getDateValue(dataPair.x, props.dateFormat))
+        return data.map((dataPair) => getDateValue(dataPair.x, props.dateFormat))
       }
 
-      return props.data.map((dataPair) => dataPair.y)
+      return data.map((dataPair) => dataPair.y)
     },
-    [props.data, props.dateFormat]
+    [data, props.dateFormat]
   )
 
   const sortedUniqueValues = useMemo(() => {
     const sorted = getLabels('y').sort((a, b) => b - a)
     return [...new Set(sorted)]
-  }, [props.data])
+  }, [data])
+
+  useEffect(() => {
+    if (props.data.length > MAX_BARS_NUMBER) {
+      setData(props.data.slice(sliceFrom, sliceTo))
+    } else {
+      setData(props.data)
+    }
+  }, [props.data, sliceFrom, sliceTo])
 
   return (
-    <>
-      <HistogramContainer id='histogram-container' style={{ width: props.width, height: props.height }}>
+    <HistogramContainer style={{ width: props.width, height: props.height }}>
+      <ChartContainer id='chart-container'>
         <AxisX labels={getLabels('x')} />
         <AxisY labels={sortedUniqueValues} />
 
-        {props.data.map((dataPair, index: number) => (
+        {data.map((dataPair, index: number) => (
           <Bar
             key={'bar-' + index}
             data={dataPair}
@@ -52,10 +65,12 @@ const Histogram = (props: HistogramProps): JSX.Element => {
             tooltipContent={dataPair.y.toString()}
           />
         ))}
-      </HistogramContainer>
-      {!props.disableSlider ? <Slider /> : null}
+      </ChartContainer>
+      {!props.disableSlider && props.data.length > MAX_BARS_NUMBER ? (
+        <Slider barsNumber={props.data.length} setSliceFrom={setSliceFrom} setSliceTo={setSliceTo} />
+      ) : null}
       <Tooltip id='histogram-tooltip' />
-    </>
+    </HistogramContainer>
   )
 }
 

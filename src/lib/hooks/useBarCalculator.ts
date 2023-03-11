@@ -1,8 +1,9 @@
 import { MutableRefObject, useEffect, useMemo, useState } from 'react'
+import { ChartData } from '../types/HistogramTypes'
 
 type BarDetails = {
   barRef: MutableRefObject<HTMLDivElement | null>
-  representedValue: number
+  data: ChartData
   representedValueIndex: number
   maxValue: number
 }
@@ -20,7 +21,7 @@ export const useBarCalculator = (props: BarDetails): ReturnData => {
   const [barContainerHeight, setBarContainerHeight] = useState<number | undefined>(undefined)
 
   const getBarPosition = (axisItem: Element): number => {
-    const histogramContainer = document.getElementById('histogram-container')
+    const histogramContainer = document.getElementById('chart-container')
     const histogramPositionX = histogramContainer?.getBoundingClientRect().x
     const axisPositionX = axisItem.getBoundingClientRect().x
 
@@ -33,14 +34,14 @@ export const useBarCalculator = (props: BarDetails): ReturnData => {
     setBarContainerHeight(props.barRef.current?.clientHeight)
     setBarWidth(axisItem?.clientWidth ?? 0)
     setBarPosition(getBarPosition(axisItem))
-  }, [])
+  }, [props.representedValueIndex, props.data])
 
   useEffect(() => {
     if (barContainerHeight) {
       const oneUnitPixels = barContainerHeight / props.maxValue
-      setBarHeight(oneUnitPixels * props.representedValue)
+      setBarHeight(oneUnitPixels * props.data.y)
     }
-  }, [props.representedValue, barContainerHeight, props.maxValue])
+  }, [props.data, barContainerHeight, props.maxValue])
 
   return {
     width: barWidth,

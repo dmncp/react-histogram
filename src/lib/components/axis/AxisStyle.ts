@@ -11,6 +11,12 @@ export const LabelsXContainer = styled.div`
   color: white;
   display: flex;
   justify-content: space-between;
+  gap: 3px;
+
+  & > div {
+    text-align: center;
+    width: 30px;
+  }
 `
 
 export const LineX = styled.div`
@@ -38,6 +44,6 @@ export const LabelsYContainer = styled.div`
 
   & > div:last-of-type {
     /* background-color: red; */
-    /* visibility: hidden; */
+    visibility: hidden;
   }
 `

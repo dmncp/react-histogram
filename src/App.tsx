@@ -7,11 +7,11 @@ const START_DATE = Date.now()
 const END_DATE = Date.now() + 20 * DAY
 
 function App() {
-  const data = generateData(START_DATE, END_DATE, 40)
+  const data = generateData(START_DATE, END_DATE, 100)
 
   return (
-    <div className='App' style={{ width: '95vw', height: 500, backgroundColor: 'darkorchid' }}>
-      <Histogram data={data} type='bar' width={'80%'} height={'80%'} disableSlider dateFormat='DAYS' />
+    <div className='App' style={{ width: '95vw', height: 700, backgroundColor: 'darkorchid' }}>
+      <Histogram data={data} type='bar' width={'80%'} height={'50%'} dateFormat='DAYS' />
     </div>
   )
 }

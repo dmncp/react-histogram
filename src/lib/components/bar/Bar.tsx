@@ -15,7 +15,7 @@ const Bar = (props: BarProps): JSX.Element => {
 
   const { width, height, position } = useBarCalculator({
     barRef: barContainerRef,
-    representedValue: props.data.y,
+    data: props.data,
     representedValueIndex: props.dataIndex,
     maxValue: props.maxValue
   })
