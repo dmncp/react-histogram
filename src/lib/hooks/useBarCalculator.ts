@@ -30,8 +30,6 @@ export const useBarCalculator = (props: BarDetails): ReturnData => {
   useEffect(() => {
     const axisItem = document.getElementsByClassName('x-axis-item')[props.representedValueIndex]
 
-    console.log(props.representedValue)
-
     setBarContainerHeight(props.barRef.current?.clientHeight)
     setBarWidth(axisItem?.clientWidth ?? 0)
     setBarPosition(getBarPosition(axisItem))

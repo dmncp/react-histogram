@@ -24,13 +24,20 @@ export const LineX = styled.div`
 export const LabelsYContainer = styled.div`
   width: 90%;
   height: 100%;
-  /* background-color: green; */
   position: relative;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 
   & > div {
     border-bottom: 1px solid black;
     padding-top: 10px;
+  }
+
+  & > div:last-of-type {
+    /* background-color: red; */
+    /* visibility: hidden; */
   }
 `

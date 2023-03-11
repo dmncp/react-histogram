@@ -3,7 +3,7 @@ import { MutableRefObject, useEffect, useMemo, useState } from 'react'
 
 type ChartDetails = {
   containerRef: MutableRefObject<HTMLDivElement | null>
-  dataValues: number[]
+  maxValue: number
 }
 
 type ReturnData = {
@@ -38,20 +38,19 @@ export const useAxisCalculator = (props: ChartDetails): ReturnData => {
 
   useEffect(() => {
     if (histogramHeight && lineHeight) {
-      const maxValue = props.dataValues[0]
-      const minValue = props.dataValues[props.dataValues.length - 1]
+      const minValue = 0
 
-      console.log(maxValue, minValue)
+      console.log(props.maxValue, minValue)
 
+      const oneLinePercentage = lineHeight / histogramHeight
       const possibleDivsNumber = Math.floor(histogramHeight / lineHeight)
-      const valuesStep = Math.floor(maxValue / possibleDivsNumber)
 
       setAxisValues([])
-      for (let i = 1; i <= possibleDivsNumber; i++) {
-        setAxisValues((prevState) => [minValue + valuesStep * i, ...prevState])
+      for (let i = 0; i <= possibleDivsNumber; i++) {
+        setAxisValues((prevState) => [Math.round(oneLinePercentage * i * props.maxValue * 10) / 10, ...prevState])
       }
     }
-  }, [lineHeight, histogramHeight, props.dataValues])
+  }, [lineHeight, histogramHeight, props.maxValue])
 
   return {
     axisValues

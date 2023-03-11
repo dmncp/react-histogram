@@ -9,7 +9,7 @@ const AxisY = (props: AxisProps): JSX.Element => {
 
   const { axisValues } = useAxisCalculator({
     containerRef,
-    dataValues: props.labels
+    maxValue: props.labels[0]
   })
 
   return (
